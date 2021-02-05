@@ -1,42 +1,45 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import AppHeader from './components/AppBar';
-import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
+import { PlantCard } from './components/PlantCard'
 
-// import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 
-// const useStyles = makeStyles({
-//   root:{
-//     backgroundColor: '#FEFAE0',
-//     height: '100vh'
-//
-//   }
-// })
+const useStyles = makeStyles({
+  root:{
+    backgroundColor: '#FEFAE0',
+  }
+})
 
 function App() {
-  // const classes = useStyles();
+
+  const [plantList, updatePlantList] = useState([])
+
+  useEffect(() => {
+      fetch('https://trefle.io/api/v1/plants?token=oBnOBAsB-pOkfOaFkSmdjOLMvXceZ9kHLFrP2jicaz4')
+        .then(resp => resp.json())
+        .then(jsonResp => updatePlantList(jsonResp.data))
+
+    }, []
+  );
+
+
+  const classes = useStyles();
 
   return (
     <div className='app'>
       <AppHeader />
-      <div >
-        <Grid container spacing={3}>
-          <Grid item xs={3}>
-            <Paper> xs=3</Paper>
-          </Grid>
-          <Grid item xs={3}>
-            <Paper >xs=3</Paper>
-          </Grid>
-          <Grid item xs={3}>
-            <Paper >xs=3</Paper>
-          </Grid>
-          <Grid item xs={3}>
-            <Paper >xs=3</Paper>
-          </Grid>
+      <div className={classes.root}>
 
-        </Grid>
+
+
+        {plantList.map(plant => <PlantCard
+                                  plantName={plant.common_name}
+                                  image={plant.image_url}
+                                  />
+        )}
 
 
       </div>
